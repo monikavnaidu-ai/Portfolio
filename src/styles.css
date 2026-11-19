@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   BASE STYLES
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: theme('fontFamily.sans');
+  background: theme('colors.bgPrimary');
+  color: theme('colors.textPrimary');
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* The fixed navbar + modals mount at the root; reserve space for nav jumps */
+section {
+  scroll-margin-top: 72px;
+}
+
+/* ---- Page container (Tailwind 3 'container' is sticky; we use a custom one) ---- */
+.page-container {
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* ---- Hero portrait ---- */
+.portrait {
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes portrait-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.portrait {
+  animation: portrait-float 6s ease-in-out infinite;
+}
+
+/* Scrollbar (modern browsers) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: theme('colors.bgPrimary');
+}
+
+::-webkit-scrollbar-thumb {
+  background: theme('colors.primary');
+  border-radius: 4px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 201, 255, 0.22);
+  color: theme('colors.textPrimary');
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid theme('colors.primary');
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   ENTRANCE ANIMATIONS
+   ========================================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes portrait-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+.portrait {
+  animation: portrait-float 6s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   PROGRESS BARS
+   ========================================================================== */
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    theme('colors.primary') 0%,
+    theme('colors.secondary') 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+  transition: width 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   PRINT STYLES (Resume Modal)
+   ========================================================================== */
+
+@media print {
+  /* Print a clean page. The ResumeModal adds `body.printing` when open. */
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 12px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* When printing the resume, hide all app chrome (sections/header/footer)
+     but keep the modal visible as static content. */
+  body.printing > main > section,
+  body.printing > main > header,
+  body.printing > main > footer,
+  body.printing > main > noscript {
+    display: none !important;
+  }
+
+  /* Modal — turn from overlay into static, full-width print layout */
+  body.printing .modal-backdrop {
+    position: static !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  body.printing .modal-content {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 1.5rem 2rem !important;
+  }
+
+  /* Strip colors/shadows for crisp 1-page PDF export */
+  body.printing .modal-content * {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+    color: #111827 !important;
+    -webkit-text-fill-color: unset !important;
+  }
+
+  body.printing .modal-content .bg-surface,
+  body.printing .modal-content .bg-bgTertiary {
+    background: transparent !important;
+  }
+
+  body.printing .modal-content h1,
+  body.printing .modal-content h2,
+  body.printing .modal-content h3,
+  body.printing .modal-content h4 {
+    color: #111827 !important;
+    background: none !important;
+  }
+
+  body.printing .modal-content a::after {
+    content: none !important;
+  }
+
+  /* page-break rules */
+  section {
+    page-break-inside: avoid;
+  }
+
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
